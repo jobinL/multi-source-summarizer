@@ -1,0 +1,6 @@
+streamlit
+transformers
+torch
+newspaper3k
+PyMuPDF
+lxml_html_clean

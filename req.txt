@@ -1,6 +1,0 @@
-transformers
-torch       # Needed for most Hugging Face models
-newspaper3k
-PyMuPDF
-lxml_html_clean
-streamlit
