@@ -1,6 +1,7 @@
 import streamlit as st
 from utils.model_loader import load_summarizer
-from summarizer_app.news import extract_text_from_url
+from summarizer_app.news import extract_text_from_url 
+from summarizer_app.pdf import extract_text_from_pdf
 
 
 
@@ -24,7 +25,7 @@ summarizer = load_summarizer()
 # 🔘 Selection
 st.markdown("### 🔍 Select Input Type:")
 option = st.radio(
-    "", ["📝 Paste Text", "📰 News Article URL"],
+    "", ["📝 Paste Text", "📰 News Article URL","📄 Upload PDF"],
     horizontal=True
 )
 
@@ -40,7 +41,16 @@ elif option == "📰 News Article URL":
     if url:
         with st.spinner("🔄 Extracting article content..."):
             text = extract_text_from_url(url)
-        st.text_area("📰 Extracted Article:", value=text, height=200, disabled=True)
+        st.text_area("📰 Extracted Article:", value=text, height=200, disabled=True) 
+
+elif option == "📄 Upload PDF":
+    uploaded_file = st.file_uploader("Upload a PDF",type=["pdf"])
+    if uploaded_file:
+        with st.spinner("Extracting text from pdf"):
+            text = extract_text_from_pdf(uploaded_file)
+        st.text_area("Extracted PDF content:",value=text,height=250,disabled = True)
+    else:
+        text=""
 
 # 🚀 Summarize button
 if text.strip():
