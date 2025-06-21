@@ -8,5 +8,5 @@ def load_summarizer():
         "summarization",
         model="facebook/bart-large-cnn",
         framework="pt",           # Use PyTorch
-        device=-1,                # Force CPU
+        device=-1                # Force CPU 
     )
