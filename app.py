@@ -4,6 +4,8 @@ from summarizer_app.news import extract_text_from_url
 from summarizer_app.pdf import extract_text_from_pdf
 
 
+# ✨ Load the model
+summarizer = load_summarizer()
 def chunk_text(text,chunk_size=600):
     words = text.split()
     for i in range(0,len(words),chunk_size):
@@ -20,7 +22,7 @@ def summarize_long_text(text):
                 summaries.append(f"Skipped chunk{i+1} due to bad output")
         except Exception as e:
             summaries.append(f"Error on chunk {i+1}:{e}") 
-    return "\n\,".join(summaries)
+    return "\n\n".join(summaries)
 # 🎨 Page settings
 st.set_page_config(
     page_title="Multi-Source Summarizer",
@@ -35,8 +37,7 @@ Summarize long content from text, news articles, or documents in seconds.
 Select an input type and click **Summarize** to get a concise result powered by AI.
 """)
 
-# ✨ Load the model
-summarizer = load_summarizer()
+
 
 # 🔘 Selection
 st.markdown("### 🔍 Select Input Type:")
@@ -60,10 +61,14 @@ elif option == "📰 News Article URL":
         st.text_area("📰 Extracted Article:", value=text, height=200, disabled=True) 
 
 elif option == "📄 Upload PDF":
-    uploaded_file = st.file_uploader("Upload a PDF",type=["pdf"])
+    uploaded_file = st.file_uploader("Upload a PDF",type=["pdf","epub","xps"])
     if uploaded_file:
         with st.spinner("Extracting text from pdf"):
-            text = extract_text_from_pdf(uploaded_file)
+            file_type = uploaded_file.name.split(".")[-1].lower() 
+            if file_type == "txt":
+                text = uploaded_file.read().decode("utf-8")
+            else:
+                text = extract_text_from_pdf(uploaded_file,file_type)
         st.text_area("Extracted PDF content:",value=text,height=250,disabled = True)
     else:
         text=""
